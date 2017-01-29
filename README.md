@@ -209,4 +209,3 @@ and -0.1 respectively.
 ## Results
 
 In this project, we were working on a regression problem in the terms of self-driving cars. We mainly focused on finding a suitable network architecture and trained a model a dataset. According to Mean Square Error (MSE) the model worked well. Next generating new new dataset was the problem here. Additionally, we didn't fully rely on MSE when building our final model. Also, we use relatively number of training epochs (namely 20 epochs).
-[![](https://img.youtube.com/vi/gGLpPakORw4/0.jpg)](https://youtu.be/gGLpPakORw4 "Udacity Dataset")
