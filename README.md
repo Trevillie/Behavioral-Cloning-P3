@@ -1,8 +1,8 @@
 # Behavioral-Cloning-P3 - Deep Learning
-##Self-Driving Car Nanodegree
+## Self-Driving Car Nanodegree
 
 ### Overview
-The objective of this project is to clone human driving behavior by use of Convolutional Neural Network using Keras. In order to achieve this, we are going to use a udacity designed Car Simulator. During the training session, we will navigate our car inside the simulator using the keyboard or a gamepad (joystick such as PS3 or Xbox controller). While we navigating the car the simulator records training images and respective steering angles. Then we use those recorded data to train our neural network. It uses the trained model to predict steering angles for a car in the simulator given a frame from central camera.
+The objective of this project is to clone human driving behavior by use of Convolutional Neural Network using Keras. In order to achieve this, we are going to use a udacity designed Car Simulator. During the training session, we will navigate our car inside the simulator using the keyboard or a gamepad (joystick such as PS3 or Xbox controller). While we navigating the car the simulator records training images and respective steering angles. Then we use those recorded data to train our neural network. It uses the trained model to predict steering angles for a car in the simulator given a frame from the central camera.
 
 ### Dependencies
 
@@ -24,20 +24,122 @@ This project requires **Python 3.5** and the following Python libraries installe
 
 You can download the stimulator at https://d17h27t6h515a5.cloudfront.net/topher/2016/November/5831f3a4_simulator-windows-64/simulator-windows-64.zip
 
+## Implementation
+
 ### How to Generate Model
 
 You can set the folder path at line 17 in model.py make sure that your folder contains \IMG\ (generated images) folder and a csv (driving data)
 - `data_dirs = ['folder_name']`
 
-##My driving data
-test1 - https://drive.google.com/file/d/0Bw2un6-T5az-V3gzZzlONG14dXM/view?usp=sharing
-test2 - https://drive.google.com/file/d/0Bw2un6-T5az-VTU1WENaS1BJRlE/view?usp=sharing
-test3 - https://drive.google.com/file/d/0Bw2un6-T5az-QktxMTEtZko4MTA/view?usp=sharing
-test4 - https://drive.google.com/file/d/0Bw2un6-T5az-R3JxQ1lFUDlQRzQ/view?usp=sharing
-Udacity test set - https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip
+### My driving data
+
+test1 - https://drive.google.com/file/d/0Bw2un6-T5az-V3gzZzlONG14dXM/view?usp=sharing <br>
+test2 - https://drive.google.com/file/d/0Bw2un6-T5az-VTU1WENaS1BJRlE/view?usp=sharing <br>
+test3 - https://drive.google.com/file/d/0Bw2un6-T5az-QktxMTEtZko4MTA/view?usp=sharing <br>
+test4 - https://drive.google.com/file/d/0Bw2un6-T5az-R3JxQ1lFUDlQRzQ/view?usp=sharing n<br>
+Udacity test set - https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip <br>
 
 ### How to Run the Model
 
 You can clone the repo and run the drive.py file with the stimulator in Autonomous mode.
 - `python drive.py model.json`
+
+## Network Architecture
+The network consists of three convolutional layers. The layers are increasing in depth decreasing in size. There are three fully connected layers Dropout is employed between the fully connected layers and activation function is relu. <br>
+Here is the network architecture as shown by keras
+
+<table style="width: 42px;">
+<tbody>
+<tr style="height: 42px;">
+<th style="width: 10px; height: 42px;">Layer (type)&nbsp;&nbsp;</th>
+<th style="width: 10px; height: 42px;">&nbsp;Output Shape</th>
+<th style="width: 10.2px; height: 42px;">Param #&nbsp;</th>
+<th style="width: 10px; height: 42px;">&nbsp;Connected to</th>
+</tr>
+<tr style="height: 62px;">
+<td style="width: 10px; height: 62px;">&nbsp;convolution2d_1 (Convolution2D)</td>
+<td style="width: 10px; height: 62px;">&nbsp;(None, 40, 80, 32)</td>
+<td style="width: 10.2px; height: 62px;">&nbsp;320</td>
+<td style="width: 10px; height: 62px;">convolution2d_input_1[0][0]</td>
+</tr>
+<tr style="height: 42px;">
+<td style="width: 10px; height: 42px;">&nbsp;maxpooling2d_1 (MaxPooling2D)</td>
+<td style="width: 10px; height: 42px;">&nbsp;(None, 20, 40, 32)</td>
+<td style="width: 10.2px; height: 42px;">&nbsp;0</td>
+<td style="width: 10px; height: 42px;">convolution2d_1[0][0]</td>
+</tr>
+<tr style="height: 42px;">
+<td style="width: 10px; height: 42px;">&nbsp;convolution2d_2 (Convolution2D)&nbsp;</td>
+<td style="width: 10px; height: 42px;">&nbsp;(None, 10, 20, 64)</td>
+<td style="width: 10.2px; height: 42px;">18496&nbsp;</td>
+<td style="width: 10px; height: 42px;">maxpooling2d_1[0][0]</td>
+</tr>
+<tr style="height: 42px;">
+<td style="width: 10px; height: 42px;">&nbsp;maxpooling2d_2 (MaxPooling2D)&nbsp;</td>
+<td style="width: 10px; height: 42px;">&nbsp;(None, 10, 20, 64)</td>
+<td style="width: 10.2px; height: 42px;">0&nbsp;</td>
+<td style="width: 10px; height: 42px;">convolution2d_2[0][0]</td>
+</tr>
+<tr style="height: 22.4px;">
+<td style="width: 10px; height: 22.4px;">&nbsp;convolution2d_3 (Convolution2D)&nbsp;</td>
+<td style="width: 10px; height: 22.4px;">&nbsp;(None, 10, 20, 128)</td>
+<td style="width: 10.2px; height: 22.4px;">73856&nbsp;</td>
+<td style="width: 10px; height: 22.4px;">maxpooling2d_2[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;maxpooling2d_3 (MaxPooling2D)</td>
+<td style="width: 10px; height: 22px;">&nbsp;(None, 5, 10, 128)</td>
+<td style="width: 10.2px; height: 22px;">0&nbsp;</td>
+<td style="width: 10px; height: 22px;">convolution2d_3[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;flatten_1 (Flatten)</td>
+<td style="width: 10px; height: 22px;">(None, 6400)&nbsp;</td>
+<td style="width: 10.2px; height: 22px;">0</td>
+<td style="width: 10px; height: 22px;">maxpooling2d_3[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;dense_1 (Dense) &nbsp;</td>
+<td style="width: 10px; height: 22px;">&nbsp;(None, 500)</td>
+<td style="width: 10.2px; height: 22px;">&nbsp;3200500</td>
+<td style="width: 10px; height: 22px;">flatten_1[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;dropout_1 (Dropout)</td>
+<td style="width: 10px; height: 22px;">&nbsp;(None, 500)</td>
+<td style="width: 10.2px; height: 22px;">&nbsp;0</td>
+<td style="width: 10px; height: 22px;">dense_1[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;dense_2 (Dense)&nbsp;</td>
+<td style="width: 10px; height: 22px;">&nbsp;(None, 100)</td>
+<td style="width: 10.2px; height: 22px;">50100&nbsp;</td>
+<td style="width: 10px; height: 22px;">dropout_1[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">&nbsp;dropout_2 (Dropout) &nbsp;&nbsp;</td>
+<td style="width: 10px; height: 22px;">&nbsp;(None, 100)</td>
+<td style="width: 10.2px; height: 22px;">0&nbsp;</td>
+<td style="width: 10px; height: 22px;">dense_2[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">dense_3 (Dense)&nbsp;</td>
+<td style="width: 10px; height: 22px;">(None, 10)</td>
+<td style="width: 10.2px; height: 22px;">1010</td>
+<td style="width: 10px; height: 22px;">dropout_2[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">dropout_3 (Dropout)&nbsp;</td>
+<td style="width: 10px; height: 22px;">(None, 10)</td>
+<td style="width: 10.2px; height: 22px;">0</td>
+<td style="width: 10px; height: 22px;">dense_3[0][0]</td>
+</tr>
+<tr style="height: 22px;">
+<td style="width: 10px; height: 22px;">dense_4 (Dense)</td>
+<td style="width: 10px; height: 22px;">(None, 1)</td>
+<td style="width: 10.2px; height: 22px;">11</td>
+<td style="width: 10px; height: 22px;">dropout_3[0][0]</td>
+</tr>
+</tbody>
+</table>
 
