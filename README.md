@@ -1,4 +1,4 @@
-# Behavioral-Cloning-P3 - Deep Learning
+# Behavioral-Cloning- P3
 ## Self-Driving Car Nanodegree
 
 ### Overview
@@ -153,14 +153,11 @@ Here is the network architecture as shown by keras
 
 ## Choose Data
 
-test1 - #train =  5692 #val =  633 #test =  703 <br>
-test2 - #train =  12165 #val =  1352 #test =  1502 <br>
-test3 - #train =  12165 #val =  1352 #test =  1502<br>
-test4 - #train =  3942 #val =  439 #test =  487<br>
-udacity - #train =  6508 #val =  724 #test =  804<br>
-
-udacity dataset worked fine was able to complete the lab
-
+test1 - #train =  5692 #val =  633 #test =  703 (Failed) <br>
+test2 - #train =  12165 #val =  1352 #test =  1502 (Failed)<br>
+test3 - #train =  12165 #val =  1352 #test =  1502 (Completed 80perc)<br>
+test4 - #train =  3942 #val =  439 #test =  487 (Failed)<br>
+udacity - #train =  6508 #val =  724 #test =  804 (Completed Successfully)<br>
 
 ## Data Preprocessing
 
@@ -212,3 +209,4 @@ and -0.1 respectively.
 ## Results
 
 In this project, we were working on a regression problem in the terms of self-driving cars. We mainly focused on finding a suitable network architecture and trained a model a dataset. According to Mean Square Error (MSE) the model worked well. Next generating new new dataset was the problem here. Additionally, we didn't fully rely on MSE when building our final model. Also, we use relatively number of training epochs (namely 20 epochs).
+[![](https://img.youtube.com/vi/gGLpPakORw4/0.jpg)](https://youtu.be/gGLpPakORw4 "Udacity Dataset")
