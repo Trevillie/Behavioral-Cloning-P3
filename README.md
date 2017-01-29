@@ -143,3 +143,68 @@ Here is the network architecture as shown by keras
 </tbody>
 </table>
 
+## Training Approach
+
+- Data
+- Data Preprocessing
+- Batch Generators
+- Experiments
+- Results
+
+## Data
+
+test1 - #train =  5692 #val =  633 #test =  703
+test2 - #train =  12165 #val =  1352 #test =  1502
+test3 - #train =  12165 #val =  1352 #test =  1502
+test4 - #train =  3942 #val =  439 #test =  487
+udacity - #train =  6508 #val =  724 #test =  804
+
+udacity dataset worked fine was able to complete the lab
+
+
+## Data Preprocessing
+
+There are three main steps to data preprocessing:
+- Resizing the image from (320px, 160px) original size to (80px, 40px) using OpenCV resize method in line 54 `img = cv2.resize(img, target_shape)`.
+- Color space conversion - the image is converted to HVS format and only the S channel
+   is used. 
+- Normalization - scaling the data to the range of 0-1
+
+I choose only one channel (Satuation) as it might reduce the burden of proceessing and
+inturn reduce the computational power reduired. Unlike others i havent cropped the images
+because cropping might work here.but in case of a real time situation where there is a 
+traffic sign or light overhead that might be missed. Making the model process whole of 
+RGB is might again incur more processing power so RGB is converted to HSV in 
+`img = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)` line 55 model.py and only Satutation is
+used `img = img[:,:,2]`
+
+## Batch Generators
+
+There are two multithreaded nested generators supporting train, val and test sets. The 
+outer bach generator called threaded_generator which consists of producer and consumer
+launches the inner batch generator called batch_generator in a separate thread and 
+caches 10 output. 
+
+To support three data types the batch generator accepts the batch size
+a second parameter that selects the type such as train val or test.
+Based on this parameter one of three csv file arrays are chosen. The arrays are
+prepared earlier in the data loading phase where all the csv files are read.
+It is also made to support multiple directory so different datasets could could be used.
+and the rows are merged in one array. Then the array is split into parts train
+test and val and assigned to different variable. This approach simplifies data
+shuffling since the csv rows contain both features and labels and are small in 
+size.
+
+Batch Generator now randomly samples batch_size rows from the array, reads the
+images from respective files, preprocesses the images and appends them to 
+images array (X). The labels are appended to labels array and if three 
+cameras are used the labels for left and right cameras are adjusted by 0.1
+and -0.1 respectively.
+
+## Experiments
+
+- Based on the Cheatsheet (https://carnd-forums.udacity.com/cq/viewquestion.action?id=26214464&questionTitle=behavioral-cloning-cheatsheet) i tired keeping the epoch low as 5. But it didnt work in my case unless its 18-20 so i kept it to the max 20.
+
+- I tried to make my model work in track 2 it was unsuccessful. Its due to my models choice. Thought its not counted for evaluation. I found that making use of all the parameters instead of only satuation might have solved this problem.
+
+- I tried to work as simalr to the NVIDIA Model but that had 5 convolution layers, but to optimize mine i finilized to 3 convoliton layers each
