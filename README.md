@@ -145,19 +145,19 @@ Here is the network architecture as shown by keras
 
 ## Training Approach
 
-- Data
+- Choose Data
 - Data Preprocessing
 - Batch Generators
 - Experiments
 - Results
 
-## Data
+## Choose Data
 
-test1 - #train =  5692 #val =  633 #test =  703
-test2 - #train =  12165 #val =  1352 #test =  1502
-test3 - #train =  12165 #val =  1352 #test =  1502
-test4 - #train =  3942 #val =  439 #test =  487
-udacity - #train =  6508 #val =  724 #test =  804
+test1 - #train =  5692 #val =  633 #test =  703 <br>
+test2 - #train =  12165 #val =  1352 #test =  1502 <br>
+test3 - #train =  12165 #val =  1352 #test =  1502<br>
+test4 - #train =  3942 #val =  439 #test =  487<br>
+udacity - #train =  6508 #val =  724 #test =  804<br>
 
 udacity dataset worked fine was able to complete the lab
 
@@ -208,3 +208,7 @@ and -0.1 respectively.
 - I tried to make my model work in track 2 it was unsuccessful. Its due to my models choice. Thought its not counted for evaluation. I found that making use of all the parameters instead of only satuation might have solved this problem.
 
 - I tried to work as simalr to the NVIDIA Model but that had 5 convolution layers, but to optimize mine i finilized to 3 convoliton layers each
+
+## Results
+
+In this project, we were working on a regression problem in the terms of self-driving cars. We mainly focused on finding a suitable network architecture and trained a model a dataset. According to Mean Square Error (MSE) the model worked well. Next generating new new dataset was the problem here. Additionally, we didn't fully rely on MSE when building our final model. Also, we use relatively number of training epochs (namely 20 epochs).
