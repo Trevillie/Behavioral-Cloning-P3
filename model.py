@@ -1,6 +1,12 @@
-import csv
+import csv 
+from keras.models import Model, Sequential
+from keras.layers import Dense, GlobalAveragePooling2D, Convolution2D, MaxPooling2D
+from keras.layers.core import Flatten, Dense, Dropout
+from keras.optimizers import Adam
+import json
 import numpy as np
 import cv2
+from sklearn.model_selection import train_test_split
 
 target_shape = (80, 40)  # original size 320, 160
 nb_cams = 3
@@ -8,7 +14,6 @@ angle_shift = 0.1
 
 
 def load_csv(directory=''):
-    # data_dirs = ['dataset-1', 'dataset-2', 'dataset-3', 'dataset-4', 'dataset-5', 'dataset-water', 'data-udacity']
     data_dirs = ['custom']
 
     global csv_rows_train, csv_rows_val, csv_rows_test
@@ -20,11 +25,11 @@ def load_csv(directory=''):
 
         with open(log_filename, 'r') as csvfile:
             logreader = csv.reader(csvfile)
-            if dr == 'data-udacity':  # udacity data format
+            if dr == 'training-udacity-data':  # udacity data format
                 row = next(logreader)
                 print(row)
             for row in logreader:
-                if dr == 'training-udacity-data':  # udacity data
+                if dr == 'training-udacity-data':  # udacity data format
                     row[0] = dr + '/' + row[0].strip()  # center
                     row[1] = dr + '/' + row[1].strip()  # left
                     row[2] = dr + '/' + row[2].strip()  # right
@@ -36,7 +41,6 @@ def load_csv(directory=''):
     csv_rows = np.array(csv_rows)
 
     # split the rows to train test val
-    from sklearn.model_selection import train_test_split
     csv_rows_train, csv_rows_test = train_test_split(csv_rows, test_size=0.1)
     csv_rows_train, csv_rows_val = train_test_split(csv_rows_train, test_size=0.1)
 
@@ -73,11 +77,9 @@ def batch_generator(batch_size, source='train'):
 
     row_indices = range(csv_rows.shape[0])
 
-    while 1:
+    while TRUE:
         chosen_indices = np.random.choice(row_indices, size=int(batch_size / nb_cams))
-        # print(chosen_indices)
         chosen_rows = csv_rows[chosen_indices]
-        # print(chosen_rows.shape)
         images = []
         angles = []
         for row in chosen_rows:
@@ -89,7 +91,6 @@ def batch_generator(batch_size, source='train'):
         X = normalize_data(np.array(images).astype('float'))
         X = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
         Y = np.array(angles)
-        # print('Batch generated.')
         yield (X, Y)
 
 
@@ -118,82 +119,36 @@ def threaded_generator(generator, num_cached=10):
         queue.task_done()
         item = queue.get()
 
+#Model
 
-def show_predictions(X_test, Y_test):
-    print('Predicting on test set...')
-    predictions = model.predict(X_test)
-    sum_p = 0
-    sum_y = 0
-    for i in range(32):
-        sum_p += predictions[i][0]
-        sum_y += Y_test[i]
-        print('p: %.4f' % predictions[i][0], ', y: %.4f' % Y_test[i],
-              'c_p: %.4f' % sum_p, ', c_y: %.4f' % sum_y)
-
- #Model based on NVIDIA's "End to End Learning for Self-Driving Cars" paper
-			  
-from keras.models import Model, Sequential
-from keras.layers import Dense, Activation, Lambda, GlobalAveragePooling2D, Convolution2D, MaxPooling2D
-from keras.layers.core import Flatten, Dense, Dropout
-from keras.optimizers import Adam
-
-activation_relu = 'relu'
 batch_size = nb_cams*int(128/nb_cams) # must be multiply of nb_cams
 learning_rate = 1e-4
 
 
 model = Sequential()
-
-model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(target_shape[1], target_shape[0], 1)))
-
-# starts with five convolutional and maxpooling layers
-model.add(Convolution2D(24, 5, 5, border_mode='same'))
-model.add(Activation(activation_relu))
-model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1)))
-
-model.add(Convolution2D(36, 5, 5, border_mode='same', subsample=(2, 2)))
-model.add(Activation(activation_relu))
-model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1)))
-
-model.add(Convolution2D(48, 5, 5, border_mode='same', subsample=(2, 2)))
-model.add(Activation(activation_relu))
-model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1)))
-
-model.add(Convolution2D(64, 3, 3, border_mode='same', subsample=(1, 1)))
-model.add(Activation(activation_relu))
-model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1)))
-
-model.add(Convolution2D(64, 3, 3, border_mode='same', subsample=(1, 1)))
-model.add(Activation(activation_relu))
-model.add(MaxPooling2D(pool_size=(2, 2), strides=(1, 1)))
-
+model.add(Convolution2D(32, 3, 3, border_mode='same', input_shape=(target_shape[1], target_shape[0], 1)))
+model.add(MaxPooling2D())
+model.add(Convolution2D(64, 3, 3, border_mode='same'))
+model.add(MaxPooling2D())
+model.add(Convolution2D(128, 3, 3, border_mode='same'))
+model.add(MaxPooling2D())
 model.add(Flatten())
-
-# Next, five fully connected layers
-model.add(Dense(batch_size))
-model.add(Activation(activation_relu))
-
-model.add(Dense(100))
-model.add(Activation(activation_relu))
-
-model.add(Dense(50))
-model.add(Activation(activation_relu))
-
-model.add(Dense(10))
-model.add(Activation(activation_relu))
-
+model.add(Dense(500, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(100, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='relu'))
+model.add(Dropout(0.2))
 model.add(Dense(1))
 
+my_adam = Adam(lr=learning_rate)
+model.compile(loss='mse', optimizer=my_adam)
+
 model.summary()
-
-model.compile(optimizer=Adam(learning_rate), loss="mse", )
-
 load_csv()
 
-samples_per_epoch = batch_size * int(len(csv_rows_train) / batch_size
-
-#based on https://carnd-forums.udacity.com/cq/viewquestion.action?id=26214464&questionTitle=behavioral-cloning-cheatsheet
-nb_epoch = 5
+samples_per_epoch = batch_size * int(len(csv_rows_train) / batch_size)
+nb_epoch = 20
 nb_val_samples = 5*batch_size
 
 history = model.fit_generator(threaded_generator(batch_generator(batch_size, 'train')),
@@ -204,27 +159,6 @@ history = model.fit_generator(threaded_generator(batch_generator(batch_size, 'tr
 
 print('Training completed.')
 
-# Visualize training history
-def visualize_history():
-    import matplotlib.pyplot as plt
-    import numpy
-
-    print(history.history.keys())
-    #%matplotlib inline
-
-    # summarize history for loss
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'val'], loc='upper left')
-    axes = plt.gca()
-    axes.set_ylim([0,np.max(history.history['val_loss'])])
-    plt.show()
-
-#visualize_history()
-
 def eval_and_save():
     test_samples = nb_cams*int(1000/nb_cams)
     gen = threaded_generator(batch_generator(test_samples, 'test'))
@@ -233,9 +167,8 @@ def eval_and_save():
     print('Test score (MSE): ', score)
 
     filepath = 'model-' + '%.4f' % score
-    # Save model architecture:
+    # Save model
     json_string = model.to_json()
-    import json
     with open(filepath + '.json', 'w') as outfile:
         json.dump(json_string, outfile)
     print('Model saved to ', filepath + '.json')
