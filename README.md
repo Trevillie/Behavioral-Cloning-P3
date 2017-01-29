@@ -36,7 +36,7 @@ You can set the folder path at line 17 in model.py make sure that your folder co
 test1 - https://drive.google.com/file/d/0Bw2un6-T5az-V3gzZzlONG14dXM/view?usp=sharing <br>
 test2 - https://drive.google.com/file/d/0Bw2un6-T5az-VTU1WENaS1BJRlE/view?usp=sharing <br>
 test3 - https://drive.google.com/file/d/0Bw2un6-T5az-QktxMTEtZko4MTA/view?usp=sharing <br>
-test4 - https://drive.google.com/file/d/0Bw2un6-T5az-R3JxQ1lFUDlQRzQ/view?usp=sharing n<br>
+test4 - https://drive.google.com/file/d/0Bw2un6-T5az-R3JxQ1lFUDlQRzQ/view?usp=sharing <br>
 Udacity test set - https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip <br>
 
 ### How to Run the Model
@@ -153,10 +153,10 @@ Here is the network architecture as shown by keras
 
 ## Choose Data
 
-test1 - #train =  5692 #val =  633 #test =  703 (Failed) <br>
-test2 - #train =  12165 #val =  1352 #test =  1502 (Failed)<br>
+test1 - #train =  5692 #val =  633 #test =  703 (Completed 10perc) <br>
+test2 - #train =  12165 #val =  1352 #test =  1502 (Completed 40perc)<br>
 test3 - #train =  12165 #val =  1352 #test =  1502 (Completed 80perc)<br>
-test4 - #train =  3942 #val =  439 #test =  487 (Failed)<br>
+test4 - #train =  3942 #val =  439 #test =  487 (Completed 20perc)<br>
 udacity - #train =  6508 #val =  724 #test =  804 (Completed Successfully)<br>
 
 ## Data Preprocessing
