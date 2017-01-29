@@ -77,7 +77,7 @@ def batch_generator(batch_size, source='train'):
 
     row_indices = range(csv_rows.shape[0])
 
-    while TRUE:
+    while 1:
         chosen_indices = np.random.choice(row_indices, size=int(batch_size / nb_cams))
         chosen_rows = csv_rows[chosen_indices]
         images = []
