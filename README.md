@@ -1,6 +1,9 @@
 # Behavioral-Cloning- P3
 ## Self-Driving Car Nanodegree
 
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
+
 ### Overview
 The objective of this project is to clone human driving behavior by use of Convolutional Neural Network using Keras. In order to achieve this, we are going to use a udacity designed Car Simulator. During the training session, we will navigate our car inside the simulator using the keyboard or a gamepad (joystick such as PS3 or Xbox controller). While we navigating the car the simulator records training images and respective steering angles. Then we use those recorded data to train our neural network. It uses the trained model to predict steering angles for a car in the simulator given a frame from the central camera.
 
